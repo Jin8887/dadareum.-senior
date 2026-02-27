@@ -707,7 +707,7 @@
   <!-- ═══ NAV ═══ -->
   <nav id="navbar">
     <div class="nav-inner">
-      <a href="https://www.dadareum.kr/" class="nav-logo">다다름</a>
+      <a href="#hero" class="nav-logo">다다름</a>
       <ul class="nav-links">
         <li><a href="#why">왜 필요한가</a></li>
         <li><a href="#modules">교육 모듈</a></li>
@@ -1077,9 +1077,8 @@
 
   <!-- ═══ FOOTER ═══ -->
   <footer>
-  <p><a href="https://www.dadareum.kr/" style="color:rgba(255,255,255,0.5 );text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.2);padding-bottom:2px;">← 다다름 메인으로 돌아가기</a></p>
-  <p style="margin-top:16px;">© 2026 <span>다다름</span>. 학습자를 위한 바른 교육, 다른 교육.</p>
-  <p>본 자료의 무단 복제 및 배포를 금합니다.</p>
+    <p>© 2026 <span>다다름</span>. 학습자를 위한 바른 교육, 다른 교육.</p>
+    <p>본 자료의 무단 복제 및 배포를 금합니다.</p>
   </footer>
 
   <!-- ═══ MODAL ═══ -->
@@ -1088,20 +1087,20 @@
       <button class="modal-close" onclick="closeModal()">×</button>
       <h3 class="modal-title">도입 문의하기</h3>
       <p class="modal-desc">상담을 위해 필요한 정보를 입력해 주세요.<br />담당자가 확인 후 빠른 시일 내에 연락드리겠습니다.</p>
-      <form onsubmit="handleSubmit(event)">
+      <form id="contact-form" action="https://formspree.io/f/xvzbyoee" method="POST" onsubmit="handleSubmit(event)">
         <div class="form-group">
           <label class="form-label">회사명</label>
-          <input type="text" class="form-input" id="company" required placeholder="정확한 회사명을 입력해주세요" />
+          <input type="text" class="form-input" name="company" required placeholder="정확한 회사명을 입력해주세요" />
         </div>
         <div class="form-group">
           <label class="form-label">담당자명</label>
-          <input type="text" class="form-input" id="name" required placeholder="성함을 입력해주세요" />
+          <input type="text" class="form-input" name="name" required placeholder="성함을 입력해주세요" />
         </div>
         <div class="form-group">
           <label class="form-label">이메일 주소</label>
-          <input type="email" class="form-input" id="email" required placeholder="example@company.com" />
+          <input type="email" class="form-input" name="email" required placeholder="example@company.com" />
         </div>
-        <button type="submit" class="form-submit">신청하기</button>
+        <button type="submit" class="form-submit" id="submit-btn">신청하기</button>
       </form>
     </div>
   </div>
@@ -1146,14 +1145,25 @@
     function handleOverlayClick(e) {
       if (e.target === e.currentTarget) closeModal();
     }
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
       e.preventDefault();
-      const company = document.getElementById('company').value;
-      const name = document.getElementById('name').value;
-      const phone = document.getElementById('phone').value;
-      alert(`${name}님, 문의가 접수되었습니다.\n회사명: ${company}\n이메일: ${email}\n\n조만간 연락드리겠습니다.`);
-      closeModal();
-      e.target.reset();
+      var btn = document.getElementById('submit-btn');
+      btn.textContent = '전송 중...'; btn.disabled = true;
+      try {
+        var res = await fetch('https://formspree.io/f/xvzbyoee', {
+          method: 'POST',
+          body: new FormData(e.target),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          btn.textContent = '전송 완료!'; btn.style.background = '#2a9d5c';
+          setTimeout(() => { closeModal(); btn.textContent = '신청하기'; btn.style.background = ''; btn.disabled = false; }, 1800);
+        } else {
+          btn.textContent = '오류가 발생했습니다. 다시 시도해주세요.'; btn.disabled = false;
+        }
+      } catch (err) {
+        btn.textContent = '오류가 발생했습니다. 다시 시도해주세요.'; btn.disabled = false;
+      }
     }
 
     // ─── 부드러운 앵커 스크롤 ───
