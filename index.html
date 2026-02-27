@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>다다름 | 교육 프로그램</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:#0d1f3c;--blue:#1a5fd6;--cyan:#00c2d1;--gold:#c8922a;--gold-lt:#e8b455;
+      --white:#fff;--gray-bg:#f5f7fa;--gray:#6b7a99;--text:#1a1f2e;--border:#d9e1ef;
+      --font:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);color:var(--text);background:var(--navy);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+
+    /* ── 배경 ── */
+    .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,194,209,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,209,.04) 1px,transparent 1px);background-size:60px 60px}
+    .bg-glow1{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,209,.07),transparent 70%);top:-200px;right:-200px}
+    .bg-glow2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(26,95,214,.08),transparent 70%);bottom:-150px;left:-100px}
+
+    /* ── HEADER ── */
+    header{position:relative;z-index:10;padding:2rem 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07)}
+    .logo img{height:38px;width:auto;display:block}
+    .header-contact{font-family:var(--font);font-size:.82rem;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s}
+    .header-contact:hover{color:var(--cyan)}
+
+    /* ── HERO ── */
+    .hero{position:relative;z-index:10;text-align:center;padding:80px 5% 64px}
+    .hero-label{display:inline-block;font-family:var(--font);font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);background:rgba(0,194,209,.1);border:1px solid rgba(0,194,209,.25);padding:.35rem 1rem;border-radius:50px;margin-bottom:1.8rem}
+    .hero-title{font-family:var(--font);font-size:clamp(2rem,4vw,3.2rem);font-weight:900;color:var(--white);line-height:1.25;letter-spacing:-.02em;margin-bottom:1.2rem}
+    .hero-title em{color:var(--cyan);font-style:normal}
+    .hero-sub{font-family:var(--font);font-size:1rem;color:rgba(255,255,255,.55);line-height:1.9;max-width:560px;margin:0 auto}
+
+    /* ── PROGRAMS ── */
+    .programs{position:relative;z-index:10;padding:0 5% 80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto;width:100%}
+
+    .prog-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:2.8rem;display:flex;flex-direction:column;gap:1.8rem;cursor:pointer;text-decoration:none;transition:all .35s;position:relative;overflow:hidden}
+    .prog-card:hover{background:rgba(255,255,255,.08);border-color:rgba(0,194,209,.35);transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.25)}
+    .prog-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--cyan));opacity:0;transition:opacity .3s}
+    .prog-card:hover::before{opacity:1}
+
+    /* 준비중 카드 */
+    .prog-card.coming{opacity:.5;cursor:default;pointer-events:none}
+    .prog-card.coming:hover{transform:none;box-shadow:none}
+
+    .card-top{display:flex;align-items:flex-start;justify-content:space-between}
+    .card-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+    .card-icon.blue{background:rgba(26,95,214,.2);border:1px solid rgba(26,95,214,.3)}
+    .card-icon.cyan{background:rgba(0,194,209,.15);border:1px solid rgba(0,194,209,.25)}
+    .card-icon.gold{background:rgba(200,146,42,.15);border:1px solid rgba(200,146,42,.25)}
+    .card-icon.gray{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+    .card-badge{font-family:var(--font);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .8rem;border-radius:50px}
+    .badge-live{background:rgba(0,194,209,.15);color:var(--cyan);border:1px solid rgba(0,194,209,.3)}
+    .badge-new{background:rgba(200,146,42,.15);color:var(--gold-lt);border:1px solid rgba(200,146,42,.3)}
+    .badge-soon{background:rgba(255,255,255,.06);color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1)}
+
+    .card-body{}
+    .card-category{font-family:var(--font);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.5rem}
+    .card-title{font-family:var(--font);font-size:1.2rem;font-weight:800;color:var(--white);line-height:1.4;margin-bottom:.75rem}
+    .card-desc{font-family:var(--font);font-size:.87rem;color:rgba(255,255,255,.5);line-height:1.75}
+
+    .card-tags{display:flex;flex-wrap:wrap;gap:.5rem}
+    .card-tag{font-family:var(--font);font-size:.74rem;padding:.22rem .7rem;border-radius:50px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.09)}
+
+    .card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:1.4rem;border-top:1px solid rgba(255,255,255,.07)}
+    .card-link{font-family:var(--font);font-size:.85rem;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:.4rem;transition:gap .2s}
+    .prog-card:hover .card-link{gap:.7rem}
+    .card-link-soon{font-family:var(--font);font-size:.85rem;color:rgba(255,255,255,.25)}
+    .card-meta{font-family:var(--font);font-size:.78rem;color:rgba(255,255,255,.28)}
+
+    /* ── FOOTER ── */
+    footer{position:relative;z-index:10;margin-top:auto;padding:2rem 5%;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .foot-left{display:flex;align-items:center;gap:1.2rem}
+    .foot-logo img{height:28px;width:auto;opacity:.55}
+    .foot-divider{width:1px;height:18px;background:rgba(255,255,255,.15)}
+    .foot-contact{font-family:var(--font);font-size:.8rem;color:rgba(255,255,255,.35)}
+    .foot-copy{font-family:var(--font);font-size:.75rem;color:rgba(255,255,255,.22)}
+
+    /* ── ANIMATIONS ── */
+    .rv{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+    .rv.on{opacity:1;transform:none}
+
+    /* ── CONTENT SECTION ── */
+    .section-divider{position:relative;z-index:10;max-width:1100px;margin:0 auto;width:100%;padding:0 5% 2rem}
+    .section-label{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--font);font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.5rem}
+    .section-label::before{content:'';display:block;width:24px;height:1px;background:rgba(255,255,255,.2)}
+    .section-title{font-family:var(--font);font-size:1.4rem;font-weight:800;color:var(--white);margin-bottom:.4rem}
+    .section-sub{font-family:var(--font);font-size:.87rem;color:rgba(255,255,255,.4);line-height:1.7}
+    .section-line{width:100%;height:1px;background:linear-gradient(90deg,rgba(0,194,209,.2),transparent);margin-bottom:2rem}
+
+    .content-cards{position:relative;z-index:10;padding:0 5% 80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto;width:100%}
+
+    .card-icon.gold2{background:rgba(200,146,42,.15);border:1px solid rgba(200,146,42,.25)}
+    .card-icon.teal{background:rgba(0,180,160,.15);border:1px solid rgba(0,180,160,.25)}
+    .card-icon.indigo{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.25)}
+    .badge-content{background:rgba(200,146,42,.12);color:var(--gold-lt);border:1px solid rgba(200,146,42,.25)}
+    .badge-interactive{background:rgba(0,180,160,.12);color:#2dd4bf;border:1px solid rgba(0,180,160,.25)}
+    .badge-insight{background:rgba(99,102,241,.12);color:#a5b4fc;border:1px solid rgba(99,102,241,.25)}
+
+    @media(max-width:700px){
+      .hero{padding:60px 5% 48px}
+      .programs{grid-template-columns:1fr;padding-bottom:60px}
+      .prog-card{padding:2rem}
+      .content-cards{grid-template-columns:1fr;padding-bottom:60px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-layer">
+  <div class="bg-grid"></div>
+  <div class="bg-glow1"></div>
+  <div class="bg-glow2"></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#">
+    <img src="data:image/png;base64,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" alt="다다름 로고" />
+  </a>
+  <a class="header-contact" href="mailto:jjj@dadareum.kr">문의하기 →</a>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label rv">다다름 교육 프로그램</div>
+  <h1 class="hero-title rv">
+    사람이 성장하는 조직,<br>
+    <em>다다름</em>이 함께 설계합니다
+  </h1>
+  <p class="hero-sub rv">
+    리더십 역량교육부터 AI 시대 메타역량까지.<br>
+    귀 기관의 상황에 맞는 프로그램을 선택하세요.
+  </p>
+</div>
+
+<!-- PROGRAMS -->
+<div class="programs">
+
+  <!-- 카드 1: DC 기반 역량교육 -->
+  <a class="prog-card rv" href="https://program.dadareum.kr" target="_blank">
+    <div class="card-top">
+      <div class="card-icon blue">🎯</div>
+      <span class="card-badge badge-live">운영 중</span>
+    </div>
+    <div class="card-body">
+      <div class="card-category">리더십 역량교육</div>
+      <div class="card-title">모의과제 기반<br>역량교육(Development Center)</div>
+      <p class="card-desc">DC(Development Center) 기반의 모의과제 실습과 전문 퍼실리테이터의 역량 피드백으로 리더로서 '나'를 발견하고 행동변화를 이끌어냅니다.</p>
+    </div>
+    <div class="card-tags">
+      <span class="card-tag">DC 방법론</span>
+      <span class="card-tag">모의과제 실습</span>
+      <span class="card-tag">역량 피드백</span>
+      <span class="card-tag">행동변화</span>
+    </div>
+    <div class="card-footer">
+      <span class="card-link">프로그램 보기 →</span>
+      <span class="card-meta"></span>
+    </div>
+  </a>
+
+  <!-- 카드 2: 팀장 리더십 과정 -->
+  <a class="prog-card rv" href="https://meta.dadareum.kr" target="_blank">
+    <div class="card-top">
+      <div class="card-icon cyan">🧠</div>
+      <span class="card-badge badge-new">NEW</span>
+    </div>
+    <div class="card-body">
+      <div class="card-category">AI 시대 리더십</div>
+      <div class="card-title">팀장<br>리더십 과정</div>
+      <p class="card-desc">판단력, 자기수용, 다양성 수용. AI가 대신할 수 없는 리더십의 근간인 메타역량을 경험 기반 설계로 체화합니다.</p>
+    </div>
+    <div class="card-tags">
+      <span class="card-tag">메타역량</span>
+      <span class="card-tag">일터학습 민첩성</span>
+      <span class="card-tag">메타인지</span>
+      <span class="card-tag">다양성 추구</span>
+    </div>
+    <div class="card-footer">
+      <span class="card-link">프로그램 보기 →</span>
+      <span class="card-meta"></span>
+    </div>
+  </a>
+
+  <!-- 카드 3: 부장(시니어) 리더십 과정 -->
+  <a class="prog-card rv" href="https://senior.dadareum.kr" target="_blank">
+    <div class="card-top">
+      <div class="card-icon gold">🏆</div>
+      <span class="card-badge badge-new">NEW</span>
+    </div>
+    <div class="card-body">
+      <div class="card-category">시니어 리더십</div>
+      <div class="card-title">부장(시니어)<br>리더십 과정</div>
+      <p class="card-desc">조직의 중심축인 시니어 리더를 위한 과정. 경험과 통찰을 조직 성과로 연결하는 시니어만의 리더십 언어를 설계합니다.</p>
+    </div>
+    <div class="card-tags">
+      <span class="card-tag">시니어 리더십</span>
+      <span class="card-tag">조직 영향력</span>
+      <span class="card-tag">경험 자산화</span>
+      <span class="card-tag">세대 협업</span>
+    </div>
+    <div class="card-footer">
+      <span class="card-link">프로그램 보기 →</span>
+      <span class="card-meta"></span>
+    </div>
+  </a>
+
+</div>
+
+<!-- CONTENT SECTION DIVIDER -->
+<div class="section-divider rv">
+  <div class="section-label">다다름 콘텐츠 &amp; 경험</div>
+  <div class="section-title">일하는 당신을 위한 공간</div>
+  <p class="section-sub">교육 프로그램 밖에서도 다다름은 당신과 함께합니다.</p>
+  <div class="section-line"></div>
+</div>
+
+<!-- CONTENT CARDS -->
+<div class="content-cards">
+
+  <!-- 콘텐츠 카드 A: 유튜브 채널 -->
+  <a class="prog-card rv" href="https://youtube.com/@ddr_labs?si=NItTj-lFgyQmRAEl" target="_blank">
+    <div class="card-top">
+      <div class="card-icon gold2">🎵</div>
+      <span class="card-badge badge-content">직장인 공감 플레이리스트</span>
+    </div>
+    <div class="card-body">
+      <div class="card-category">직장인 공감 플레이리스트</div>
+      <div class="card-title">사직서 대신<br>플레이리스트</div>
+      <p class="card-desc">마음속 사직서를 잠시 접어두고, 직장인의 희로애락을 담은 노래로 하루를 위로받으세요.</p>
+    </div>
+    <div class="card-tags">
+      <span class="card-tag">#직장인공감</span>
+      <span class="card-tag">#퇴근길BGM</span>
+      <span class="card-tag">#플레이리스트</span>
+      <span class="card-tag">#AI작곡</span>
+    </div>
+    <div class="card-footer">
+      <span class="card-link">노래 듣기 →</span>
+      <span class="card-meta">YouTube</span>
+    </div>
+  </a>
+
+  <!-- 콘텐츠 카드 B: 마음의 소각장 -->
+  <a class="prog-card rv" href="https://sogakjang.vercel.app/" target="_blank">
+    <div class="card-top">
+      <div class="card-icon teal">🔥</div>
+      <span class="card-badge badge-interactive">인터랙티브 경험</span>
+    </div>
+    <div class="card-body">
+      <div class="card-category">인터랙티브 경험</div>
+      <div class="card-title">마음의 소각장<br><span style="font-size:.95rem;font-weight:600;color:rgba(255,255,255,.55)">— 최적주의자 되기 —</span></div>
+      <p class="card-desc">완벽주의에서 벗어나, 부정적인 감정을 태워버리는 마음 리셋 공간입니다. 지금 바로 경험해 보세요.</p>
+    </div>
+    <div class="card-tags">
+      <span class="card-tag">#마음챙김</span>
+      <span class="card-tag">#번아웃해소</span>
+      <span class="card-tag">#최적주의</span>
+      <span class="card-tag">#인터랙티브</span>
+    </div>
+    <div class="card-footer">
+      <span class="card-link">경험하러 가기 →</span>
+      <span class="card-meta">Interactive Web</span>
+    </div>
+  </a>
+
+  <!-- 콘텐츠 카드 C: 카드뉴스 -->
+  <a class="prog-card rv" href="cardnews.html" target="_blank">
+    <div class="card-top">
+      <div class="card-icon indigo">💡</div>
+      <span class="card-badge badge-insight">다다름 인사이트</span>
+    </div>
+    <div class="card-body">
+      <div class="card-category">다다름 인사이트</div>
+      <div class="card-title">다다름 인사이트 카드<br><span style="font-size:.95rem;font-weight:600;color:rgba(255,255,255,.55)">— 성장 키워드 시리즈 —</span></div>
+      <p class="card-desc">메타인지, 리더십, 자기수용… 다다름이 엄선한 성장 키워드를 카드뉴스로 만나보세요.</p>
+    </div>
+    <div class="card-tags">
+      <span class="card-tag">#메타인지</span>
+      <span class="card-tag">#리더십</span>
+      <span class="card-tag">#자기성장</span>
+      <span class="card-tag">#카드뉴스</span>
+    </div>
+    <div class="card-footer">
+      <span class="card-link">인사이트 보기 →</span>
+      <span class="card-meta">Card News</span>
+    </div>
+  </a>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-left">
+    <div class="foot-logo"><img src="data:image/png;base64,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" alt="다다름" /></div>
+    <div class="foot-divider"></div>
+    <div class="foot-contact">jjj@dadareum.kr &nbsp;·&nbsp; 010-6391-8708</div>
+  </div>
+  <div class="foot-copy">© 2025 다다름. 학습자를 위한 바른 교육, 다른 교육.</div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('on'), i * 100);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
