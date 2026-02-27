@@ -1097,8 +1097,8 @@
           <input type="text" class="form-input" id="name" required placeholder="성함을 입력해주세요" />
         </div>
         <div class="form-group">
-          <label class="form-label">휴대폰번호</label>
-          <input type="tel" class="form-input" id="phone" required placeholder="010-0000-0000" />
+          <label class="form-label">이메일 주소</label>
+          <input type="email" class="form-input" id="email" required placeholder="example@company.com" />
         </div>
         <button type="submit" class="form-submit">신청하기</button>
       </form>
@@ -1150,7 +1150,7 @@
       const company = document.getElementById('company').value;
       const name = document.getElementById('name').value;
       const phone = document.getElementById('phone').value;
-      alert(`${name}님, 문의가 접수되었습니다.\n회사명: ${company}\n연락처: ${phone}\n\n조만간 연락드리겠습니다.`);
+      alert(`${name}님, 문의가 접수되었습니다.\n회사명: ${company}\n이메일: ${email}\n\n조만간 연락드리겠습니다.`);
       closeModal();
       e.target.reset();
     }
